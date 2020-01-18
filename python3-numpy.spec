@@ -1,3 +1,7 @@
+#
+# Conditional build:
+%bcond_without	tests	# unit tests
+
 %define		module	numpy
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
@@ -16,6 +20,9 @@ BuildRequires:	lapack-devel >= 3.1.1-2
 BuildRequires:	python3-Cython >= 0.29.14
 BuildRequires:	python3-devel >= 1:3.5
 BuildRequires:	python3-setuptools
+%if %{with tests}
+BuildRequires:	python3-pytest
+%endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
 Requires:	python3-libs >= 1:3.5
@@ -68,6 +75,10 @@ CFLAGS="%{rpmcflags} -fPIC"
 LDFLAGS="%{rpmldflags} -shared"
 
 %py3_build
+
+%if %{with tests}
+%{__python3} runtests.py --mode=full
+%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
