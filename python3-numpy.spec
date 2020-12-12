@@ -6,26 +6,26 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	1.18.1
+Version:	1.19.4
 Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	9ab88e85f5b1fc70506287317b58f71d
+# Source0-md5:	a25e91ea62ffd37ccf8e0d917484962c
 URL:		http://sourceforge.net/projects/numpy/
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
-BuildRequires:	python3-Cython >= 0.29.14
-BuildRequires:	python3-devel >= 1:3.5
+BuildRequires:	python3-Cython >= 0.29.21
+BuildRequires:	python3-devel >= 1:3.6
 BuildRequires:	python3-setuptools
 %if %{with tests}
 BuildRequires:	python3-pytest
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-Requires:	python3-libs >= 1:3.5
+Requires:	python3-libs >= 1:3.6
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -151,9 +151,11 @@ rm -rf $RPM_BUILD_ROOT
 
 %files devel
 %defattr(644,root,root,755)
+%{py3_sitedir}/%{module}/*.pxd
 %{py3_sitedir}/%{module}/core/include
 %{py3_sitedir}/%{module}/core/lib
 %{py3_sitedir}/%{module}/random/*.pxd
+%{py3_sitedir}/%{module}/random/lib
 
 %files -n f2py3
 %defattr(644,root,root,755)
