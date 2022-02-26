@@ -6,15 +6,14 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	1.21.4
+Version:	1.22.2
 Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	06019c1116b3e2791bd507f898257e7f
-Patch0:		bpo-45167.patch
+# Source0-md5:	5b506b01ef454f39272ca75de1c7f61c
 URL:		https://github.com/numpy/numpy
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
@@ -45,7 +44,7 @@ Ten pakiet zawiera moduły Pythona 3.
 Summary:	C header files for Python 3 numerical modules
 Summary(pl.UTF-8):	Pliki nagłówkowe języka C modułów numerycznych Pythona 3
 Group:		Development/Languages/Python
-%pyrequires_eq	python-devel
+%pyrequires_eq	python3-devel
 Requires:	%{name} = %{epoch}:%{version}-%{release}
 
 %description devel
@@ -68,7 +67,6 @@ Generator interfejsów z Fortranu do Pythona 3.
 
 %prep
 %setup -q -n %{module}-%{version}
-%patch0 -p1
 
 %build
 # numpy.distutils uses CFLAGS/LDFLAGS as its own flags replacements,
@@ -106,6 +104,9 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/*.pyi
 %{py3_sitedir}/%{module}/py.typed
 %{py3_sitedir}/%{module}/__pycache__
+%dir %{py3_sitedir}/%{module}/array_api
+%{py3_sitedir}/%{module}/array_api/*.py
+%{py3_sitedir}/%{module}/array_api/__pycache__
 %dir %{py3_sitedir}/%{module}/compat
 %{py3_sitedir}/%{module}/compat/*.py
 %{py3_sitedir}/%{module}/compat/__pycache__
