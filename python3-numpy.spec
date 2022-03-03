@@ -119,6 +119,7 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/distutils/*.py
 %{py3_sitedir}/%{module}/distutils/*.pyi
 %{py3_sitedir}/%{module}/distutils/__pycache__
+%{py3_sitedir}/%{module}/distutils/checks
 %dir %{py3_sitedir}/%{module}/distutils/command
 %{py3_sitedir}/%{module}/distutils/command/*.py
 %{py3_sitedir}/%{module}/distutils/command/__pycache__
