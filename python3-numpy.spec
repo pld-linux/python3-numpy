@@ -15,14 +15,14 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	1.22.2
-Release:	3
+Version:	1.22.4
+Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	5b506b01ef454f39272ca75de1c7f61c
+# Source0-md5:	09b3a41ea0b9bc20bd1691cf88f0b0d3
 Patch0:		%{name}-deprecated.patch
 URL:		https://github.com/numpy/numpy
 %if "%(test -w /dev/shm ; echo $?)" != "0"
@@ -30,15 +30,21 @@ BuildRequires:	WRITABLE(/dev/shm)
 %endif
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
-BuildRequires:	python3-Cython >= 0.29.24
-BuildRequires:	python3-devel >= 1:3.6
-BuildRequires:	python3-setuptools
+BuildRequires:	python3-Cython >= 0.29.30
+BuildRequires:	python3-devel >= 1:3.8
+BuildRequires:	python3-setuptools >= 1:59.2.0
 %if %{with tests}
-BuildRequires:	python3-pytest
+%if "%{ver_lt '%{py3_ver}' '3.10'}" == "1"
+BuildRequires:	python3-cffi
+%endif
+BuildRequires:	python3-hypothesis >= 6.24.1
+#BuildRequires:	python3-mypy >= 0.940
+BuildRequires:	python3-pytest >= 6.2.5
+BuildRequires:	python3-pytz >= 2021.3
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
-Requires:	python3-libs >= 1:3.6
+Requires:	python3-libs >= 1:3.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
