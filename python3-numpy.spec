@@ -16,6 +16,9 @@ Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-
 # Source0-md5:	5b506b01ef454f39272ca75de1c7f61c
 Patch0:		%{name}-deprecated.patch
 URL:		https://github.com/numpy/numpy
+%if "%(test -w /dev/shm ; echo $?)" != "0"
+BuildRequires:	WRITABLE(/dev/shm)
+%endif
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
 BuildRequires:	python3-Cython >= 0.29.24
