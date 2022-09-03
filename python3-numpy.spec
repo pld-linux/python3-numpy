@@ -1,3 +1,12 @@
+# TODO: failing tests with 32-bit ABIs:
+# - i686:
+# FAILED numpy/core/tests/test_mem_policy.py::test_new_policy - AssertionError:...
+# FAILED numpy/core/tests/test_ufunc.py::TestUfunc::test_identityless_reduction_huge_array
+# FAILED numpy/core/tests/test_umath.py::TestRemainder::test_float_remainder_overflow
+# FAILED numpy/random/tests/test_generator_mt19937.py::TestRandomDist::test_pareto
+# - x32:
+# Fatal Python error: Segmentation fault
+# File ".../BUILD/numpy-1.22.2/build/testenv/libx32/python3.10/site-packages/numpy/random/tests/test_direct.py", line 250 in test_pickle
 #
 # Conditional build:
 %bcond_without	tests	# unit tests
