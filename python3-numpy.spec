@@ -14,6 +14,7 @@ Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
 # Source0-md5:	5b506b01ef454f39272ca75de1c7f61c
+Patch0:		%{name}-deprecated.patch
 URL:		https://github.com/numpy/numpy
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
@@ -67,6 +68,7 @@ Generator interfejsów z Fortranu do Pythona 3.
 
 %prep
 %setup -q -n %{module}-%{version}
+%patch0 -p1
 
 %build
 # numpy.distutils uses CFLAGS/LDFLAGS as its own flags replacements,

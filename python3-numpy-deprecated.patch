@@ -1,0 +1,39 @@
+--- numpy-1.22.4/numpy/random/tests/test_extending.py.orig	2022-05-20 15:46:11.022547000 +0200
++++ numpy-1.22.4/numpy/random/tests/test_extending.py	2022-09-02 21:05:39.227962995 +0200
+@@ -30,16 +30,6 @@ try:
+     from Cython.Compiler.Version import version as cython_version
+ except ImportError:
+     cython = None
+-else:
+-    from distutils.version import LooseVersion
+-    # Cython 0.29.21 is required for Python 3.9 and there are
+-    # other fixes in the 0.29 series that are needed even for earlier
+-    # Python versions.
+-    # Note: keep in sync with the one in pyproject.toml
+-    required_version = LooseVersion('0.29.21')
+-    if LooseVersion(cython_version) < required_version:
+-        # too old or wrong cython, skip the test
+-        cython = None
+ 
+ @pytest.mark.skipif(cython is None, reason="requires cython")
+ @pytest.mark.slow
+--- numpy-1.22.4/numpy/core/tests/test_cython.py.orig	2022-05-20 15:46:10.990547200 +0200
++++ numpy-1.22.4/numpy/core/tests/test_cython.py	2022-09-02 21:02:27.667878264 +0200
+@@ -12,17 +12,6 @@ try:
+     from Cython.Compiler.Version import version as cython_version
+ except ImportError:
+     cython = None
+-else:
+-    from distutils.version import LooseVersion
+-
+-    # Cython 0.29.21 is required for Python 3.9 and there are
+-    # other fixes in the 0.29 series that are needed even for earlier
+-    # Python versions.
+-    # Note: keep in sync with the one in pyproject.toml
+-    required_version = LooseVersion("0.29.21")
+-    if LooseVersion(cython_version) < required_version:
+-        # too old or wrong cython, skip the test
+-        cython = None
+ 
+ pytestmark = pytest.mark.skipif(cython is None, reason="requires cython")
+ 
