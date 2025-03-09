@@ -86,7 +86,7 @@ Generator interfejsów z Fortranu do Pythona 3.
 
 %prep
 %setup -q -n %{module}-%{version}
-%patch0 -p1
+%patch -P 0 -p1
 
 %build
 # numpy.distutils uses CFLAGS/LDFLAGS as its own flags replacements,
