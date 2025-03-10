@@ -15,15 +15,14 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	1.22.4
-Release:	2
+Version:	2.2.3
+Release:	0.1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
 # Source0-md5:	09b3a41ea0b9bc20bd1691cf88f0b0d3
-Patch0:		%{name}-deprecated.patch
 URL:		https://github.com/numpy/numpy
 %if "%(test -w /dev/shm ; echo $?)" != "0"
 BuildRequires:	WRITABLE(/dev/shm)
@@ -31,16 +30,15 @@ BuildRequires:	WRITABLE(/dev/shm)
 BuildRequires:	gcc-fortran
 BuildRequires:	lapack-devel >= 3.1.1-2
 BuildRequires:	python3-Cython >= 0.29.30
-BuildRequires:	python3-devel >= 1:3.8
-BuildRequires:	python3-setuptools >= 1:59.2.0
+BuildRequires:	python3-devel >= 1:3.10
+BuildRequires:	python3-build
+BuildRequires:	python3-installer
+BuildRequires:	python3-meson # (-python?)
 %if %{with tests}
-%if "%{ver_lt '%{py3_ver}' '3.10'}" == "1"
-BuildRequires:	python3-cffi
-%endif
 BuildRequires:	python3-hypothesis >= 6.24.1
 #BuildRequires:	python3-mypy >= 0.940
 BuildRequires:	python3-pytest >= 6.2.5
-BuildRequires:	python3-pytz >= 2021.3
+BuildRequires:	python3-pytz >= 2024.1
 %endif
 BuildRequires:	rpm-pythonprov
 BuildRequires:	rpmbuild(macros) >= 1.714
@@ -86,7 +84,6 @@ Generator interfejsów z Fortranu do Pythona 3.
 
 %prep
 %setup -q -n %{module}-%{version}
-%patch -P 0 -p1
 
 %build
 # numpy.distutils uses CFLAGS/LDFLAGS as its own flags replacements,
@@ -94,7 +91,7 @@ Generator interfejsów z Fortranu do Pythona 3.
 CFLAGS="%{rpmcflags} -fPIC"
 LDFLAGS="%{rpmldflags} -shared"
 
-%py3_build
+%py3_build_pyproject
 
 %if %{with tests}
 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
@@ -104,7 +101,7 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 %install
 rm -rf $RPM_BUILD_ROOT
 
-%py3_install
+%py3_install_pyproject
 
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/doc
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/random/_examples
