@@ -1,15 +1,7 @@
-# TODO: failing tests with 32-bit ABIs:
-# - i686:
-# FAILED numpy/core/tests/test_mem_policy.py::test_new_policy - AssertionError:...
-# FAILED numpy/core/tests/test_ufunc.py::TestUfunc::test_identityless_reduction_huge_array
-# FAILED numpy/core/tests/test_umath.py::TestRemainder::test_float_remainder_overflow
-# FAILED numpy/random/tests/test_generator_mt19937.py::TestRandomDist::test_pareto
-# - x32:
-# Fatal Python error: Segmentation fault
-# File ".../BUILD/numpy-1.22.2/build/testenv/libx32/python3.10/site-packages/numpy/random/tests/test_direct.py", line 250 in test_pickle
+# TODO: how to run test suite now?
 #
 # Conditional build:
-%bcond_without	tests	# unit tests
+%bcond_with	tests	# unit tests
 
 %define		module	numpy
 Summary:	Python 3.x numerical facilities
@@ -22,7 +14,7 @@ License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	09b3a41ea0b9bc20bd1691cf88f0b0d3
+# Source0-md5:	c6ee254bcdf1e2fdb13d87e0ee4166ba
 URL:		https://github.com/numpy/numpy
 %if "%(test -w /dev/shm ; echo $?)" != "0"
 BuildRequires:	WRITABLE(/dev/shm)
@@ -33,7 +25,7 @@ BuildRequires:	python3-Cython >= 0.29.30
 BuildRequires:	python3-devel >= 1:3.10
 BuildRequires:	python3-build
 BuildRequires:	python3-installer
-BuildRequires:	python3-meson # (-python?)
+BuildRequires:	python3-meson-python
 %if %{with tests}
 BuildRequires:	python3-hypothesis >= 6.24.1
 #BuildRequires:	python3-mypy >= 0.940
@@ -85,31 +77,27 @@ Generator interfejsów z Fortranu do Pythona 3.
 %prep
 %setup -q -n %{module}-%{version}
 
+# fix #!/usr/bin/env python -> #!/usr/bin/python:
+%{__sed} -i -e '1s,^#!.*python3,#!%{__python3},' numpy/testing/print_coercion_tables.py
+
 %build
-# numpy.distutils uses CFLAGS/LDFLAGS as its own flags replacements,
-# instead of appending proper options (like -fPIC/-shared resp.)
-CFLAGS="%{rpmcflags} -fPIC"
-LDFLAGS="%{rpmldflags} -shared"
-
 %py3_build_pyproject
-
-%if %{with tests}
-PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
-%{__python3} runtests.py --mode=full
-%endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
 
 %py3_install_pyproject
 
+%if %{with tests}
+PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+%{__python3} runtests.py --mode=full
+%endif
+
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/doc
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/random/_examples
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/tests
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/*/tests
-%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/LICENSE.txt
-
-%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/distutils/mingw/gfortran_vs2003_hack.c
+%{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/random/LICENSE.md
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -122,86 +110,52 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/*.pyi
 %{py3_sitedir}/%{module}/py.typed
 %{py3_sitedir}/%{module}/__pycache__
-%dir %{py3_sitedir}/%{module}/array_api
-%{py3_sitedir}/%{module}/array_api/*.py
-%{py3_sitedir}/%{module}/array_api/__pycache__
-%dir %{py3_sitedir}/%{module}/compat
-%{py3_sitedir}/%{module}/compat/*.py
-%{py3_sitedir}/%{module}/compat/__pycache__
-%dir %{py3_sitedir}/%{module}/core
-%{py3_sitedir}/%{module}/core/*.py
-%{py3_sitedir}/%{module}/core/*.pyi
-%{py3_sitedir}/%{module}/core/__pycache__
-%attr(755,root,root) %{py3_sitedir}/%{module}/core/*.cpython-3*.so
-%dir %{py3_sitedir}/%{module}/distutils
-%{py3_sitedir}/%{module}/distutils/*.py
-%{py3_sitedir}/%{module}/distutils/*.pyi
-%{py3_sitedir}/%{module}/distutils/__pycache__
-%{py3_sitedir}/%{module}/distutils/checks
-%dir %{py3_sitedir}/%{module}/distutils/command
-%{py3_sitedir}/%{module}/distutils/command/*.py
-%{py3_sitedir}/%{module}/distutils/command/__pycache__
-%dir %{py3_sitedir}/%{module}/distutils/fcompiler
-%{py3_sitedir}/%{module}/distutils/fcompiler/*.py
-%{py3_sitedir}/%{module}/distutils/fcompiler/__pycache__
+%dir %{py3_sitedir}/%{module}/_core
+%{py3_sitedir}/%{module}/_core/*.py
+%{py3_sitedir}/%{module}/_core/*.pyi
+%{py3_sitedir}/%{module}/_core/__pycache__
+%attr(755,root,root) %{py3_sitedir}/%{module}/_core/*.cpython-3*.so
+%{py3_sitedir}/%{module}/_pyinstaller
+%{py3_sitedir}/%{module}/_typing
+%{py3_sitedir}/%{module}/_utils
+%{py3_sitedir}/%{module}/char
+%{py3_sitedir}/%{module}/compat
+%{py3_sitedir}/%{module}/core
 %dir %{py3_sitedir}/%{module}/fft
 %{py3_sitedir}/%{module}/fft/*.py
 %{py3_sitedir}/%{module}/fft/*.pyi
 %{py3_sitedir}/%{module}/fft/__pycache__
-%attr(755,root,root) %{py3_sitedir}/%{module}/fft/_pocketfft_internal.cpython-3*.so
-%dir %{py3_sitedir}/%{module}/lib
-%{py3_sitedir}/%{module}/lib/*.py
-%{py3_sitedir}/%{module}/lib/*.pyi
-%{py3_sitedir}/%{module}/lib/__pycache__
+%attr(755,root,root) %{py3_sitedir}/%{module}/fft/*.cpython-3*.so
+%{py3_sitedir}/%{module}/lib
 %dir %{py3_sitedir}/%{module}/linalg
 %{py3_sitedir}/%{module}/linalg/*.py
 %{py3_sitedir}/%{module}/linalg/*.pyi
 %{py3_sitedir}/%{module}/linalg/__pycache__
-%attr(755,root,root) %{py3_sitedir}/%{module}/linalg/_umath_linalg.cpython-3*.so
-%attr(755,root,root) %{py3_sitedir}/%{module}/linalg/lapack_lite.cpython-3*.so
-%dir %{py3_sitedir}/%{module}/ma
-%{py3_sitedir}/%{module}/ma/*.py
-%{py3_sitedir}/%{module}/ma/*.pyi
-%{py3_sitedir}/%{module}/ma/__pycache__
-%dir %{py3_sitedir}/%{module}/matrixlib
-%{py3_sitedir}/%{module}/matrixlib/*.py
-%{py3_sitedir}/%{module}/matrixlib/*.pyi
-%{py3_sitedir}/%{module}/matrixlib/__pycache__
-%dir %{py3_sitedir}/%{module}/polynomial
-%{py3_sitedir}/%{module}/polynomial/*.py
-%{py3_sitedir}/%{module}/polynomial/*.pyi
-%{py3_sitedir}/%{module}/polynomial/__pycache__
+%attr(755,root,root) %{py3_sitedir}/%{module}/linalg/*.cpython-3*.so
+%{py3_sitedir}/%{module}/ma
+%{py3_sitedir}/%{module}/matrixlib
+%{py3_sitedir}/%{module}/polynomial
 %dir %{py3_sitedir}/%{module}/random
 %{py3_sitedir}/%{module}/random/*.py
 %{py3_sitedir}/%{module}/random/*.pyi
 %{py3_sitedir}/%{module}/random/__pycache__
 %attr(755,root,root) %{py3_sitedir}/%{module}/random/*.cpython-3*.so
-%dir %{py3_sitedir}/%{module}/testing
-%{py3_sitedir}/%{module}/testing/_private
-%{py3_sitedir}/%{module}/testing/*.py
-%{py3_sitedir}/%{module}/testing/*.pyi
-%{py3_sitedir}/%{module}/testing/__pycache__
-%dir %{py3_sitedir}/%{module}/typing
-%{py3_sitedir}/%{module}/typing/*.py
-%{py3_sitedir}/%{module}/typing/*.pyi
-%{py3_sitedir}/%{module}/typing/__pycache__
-%{py3_sitedir}/numpy-%{version}-py*.egg-info
+%{py3_sitedir}/%{module}/testing
+%{py3_sitedir}/%{module}/rec
+%{py3_sitedir}/%{module}/strings
+%{py3_sitedir}/%{module}/typing
+%{py3_sitedir}/numpy-%{version}.dist-info
 
 %files devel
 %defattr(644,root,root,755)
+%attr(755,root,root) %{_bindir}/numpy-config
 %{py3_sitedir}/%{module}/*.pxd
-%{py3_sitedir}/%{module}/core/include
-%{py3_sitedir}/%{module}/core/lib
+%{py3_sitedir}/%{module}/_core/include
+%{py3_sitedir}/%{module}/_core/lib
 %{py3_sitedir}/%{module}/random/*.pxd
 %{py3_sitedir}/%{module}/random/lib
 
 %files -n f2py3
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_bindir}/f2py
-%attr(755,root,root) %{_bindir}/f2py3
-%attr(755,root,root) %{_bindir}/f2py%{py3_ver}
-%dir %{py3_sitedir}/%{module}/f2py
-%{py3_sitedir}/%{module}/f2py/*.py
-%{py3_sitedir}/%{module}/f2py/*.pyi
-%{py3_sitedir}/%{module}/f2py/__pycache__
-%{py3_sitedir}/%{module}/f2py/src
+%{py3_sitedir}/%{module}/f2py
