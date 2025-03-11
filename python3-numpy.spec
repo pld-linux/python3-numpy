@@ -8,7 +8,7 @@ Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
 Version:	2.2.3
-Release:	0.1
+Release:	
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
