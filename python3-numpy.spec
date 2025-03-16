@@ -8,7 +8,7 @@ Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
 Version:	2.2.3
-Release:	1
+Release:	2
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
@@ -95,8 +95,6 @@ PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
 
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/doc
 %{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/random/_examples
-%{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/tests
-%{__rm} -r $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/*/tests
 %{__rm} $RPM_BUILD_ROOT%{py3_sitedir}/%{module}/random/LICENSE.md
 
 %clean
@@ -152,8 +150,13 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/*.pxd
 %{py3_sitedir}/%{module}/_core/include
 %{py3_sitedir}/%{module}/_core/lib
+%{py3_sitedir}/%{module}/_core/tests
+%{py3_sitedir}/%{module}/fft/tests
+%{py3_sitedir}/%{module}/linalg/tests
 %{py3_sitedir}/%{module}/random/*.pxd
 %{py3_sitedir}/%{module}/random/lib
+%{py3_sitedir}/%{module}/random/tests
+%{py3_sitedir}/%{module}/tests
 
 %files -n f2py3
 %defattr(644,root,root,755)
