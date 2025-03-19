@@ -7,14 +7,14 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	2.2.3
-Release:	2
+Version:	2.2.4
+Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	c6ee254bcdf1e2fdb13d87e0ee4166ba
+# Source0-md5:	56232f4a69b03dd7a87a55fffc5f2ebc
 URL:		https://github.com/numpy/numpy
 %if "%(test -w /dev/shm ; echo $?)" != "0"
 BuildRequires:	WRITABLE(/dev/shm)
