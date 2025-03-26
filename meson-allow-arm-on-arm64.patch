@@ -1,0 +1,29 @@
+From ec027fe1161e011c7bcb43c50ba34b8405839708 Mon Sep 17 00:00:00 2001
+From: Alyssa Ross <hi@alyssa.is>
+Date: Sun, 14 Jul 2024 17:39:30 +0200
+Subject: [PATCH] Revert "Support armel/armhf builds on native arm64 hosts."
+
+This reverts commit cc201a539674babf46f726859587afb5ed6a6867.
+
+It's true that some aarch64 CPUs can run 32-bit ARM code, but some
+(especially high-end ones, those most likely to be running builds)
+cannot.  It's better to assume that they can't, so builds don't
+unnecessarily fail due to attempting to run a sanity check executable.
+---
+ mesonbuild/environment.py | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/mesonbuild/environment.py b/mesonbuild/environment.py
+index be40dbcfd4be..f71bf219cf64 100644
+--- a/mesonbuild/environment.py
++++ b/mesonbuild/environment.py
+@@ -512,8 +512,7 @@ def machine_info_can_run(machine_info: MachineInfo):
+     return \
+         (machine_info.cpu_family == true_build_cpu_family) or \
+         ((true_build_cpu_family == 'x86_64') and (machine_info.cpu_family == 'x86')) or \
+-        ((true_build_cpu_family == 'mips64') and (machine_info.cpu_family == 'mips')) or \
+-        ((true_build_cpu_family == 'aarch64') and (machine_info.cpu_family == 'arm'))
++        ((true_build_cpu_family == 'mips64') and (machine_info.cpu_family == 'mips'))
+ 
+ class Environment:
+     private_dir = 'meson-private'
