@@ -83,7 +83,7 @@ Generator interfejsów z Fortranu do Pythona 3.
 %{__sed} -i -e '1s,^#!.*python3,#!%{__python3},' numpy/testing/print_coercion_tables.py
 
 %build
-%py3_build_pyproject
+%py3_build_pyproject -Ccompile-args=-j -Ccompile-args='%{__jobs}' -Ccompile-args=-v
 
 %install
 rm -rf $RPM_BUILD_ROOT
