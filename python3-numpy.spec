@@ -34,7 +34,7 @@ BuildRequires:	python3-pytest >= 6.2.5
 BuildRequires:	python3-pytz >= 2024.1
 %endif
 BuildRequires:	rpm-pythonprov
-BuildRequires:	rpmbuild(macros) >= 1.714
+BuildRequires:	rpmbuild(macros) >= 2.044
 Requires:	python3-libs >= 1:3.8
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
