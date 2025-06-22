@@ -7,14 +7,14 @@
 Summary:	Python 3.x numerical facilities
 Summary(pl.UTF-8):	Moduły do obliczeń numerycznych dla języka Python 3.x
 Name:		python3-%{module}
-Version:	2.2.4
+Version:	2.3.1
 Release:	1
 Epoch:		1
 License:	BSD
 Group:		Libraries/Python
 #Source0Download: https://github.com/numpy/numpy/releases/
 Source0:	https://github.com/numpy/numpy/releases/download/v%{version}/%{module}-%{version}.tar.gz
-# Source0-md5:	56232f4a69b03dd7a87a55fffc5f2ebc
+# Source0-md5:	886559a4c541298b37245e389ce8bf10
 Patch0:		meson-allow-arm-on-arm64.patch
 URL:		https://github.com/numpy/numpy
 %if "%(test -w /dev/shm ; echo $?)" != "0"
@@ -119,8 +119,8 @@ rm -rf $RPM_BUILD_ROOT
 %{py3_sitedir}/%{module}/_typing
 %{py3_sitedir}/%{module}/_utils
 %{py3_sitedir}/%{module}/char
-%{py3_sitedir}/%{module}/compat
 %{py3_sitedir}/%{module}/core
+%{py3_sitedir}/%{module}/ctypeslib
 %dir %{py3_sitedir}/%{module}/fft
 %{py3_sitedir}/%{module}/fft/*.py
 %{py3_sitedir}/%{module}/fft/*.pyi
